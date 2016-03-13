@@ -11,36 +11,37 @@
 
 makeCacheMatrix <- function(x = matrix()) {
 
-  s <- NULL
+  i <- NULL
   set <- function(y) {
     x <<- y 
-    s <<- NULL
+    i <<- NULL
   }
   get <- function() x
-  setSolve <- function(solve) s <<- solve
-  getSolve <- function() s
+  setInverse <- function(inverse) i <<- inverse
+  getInverse <- function() i
   
   list(set = set, get = get,
-       setSolve = setSolve,
-       getSolve = getSolve)
+       setInverse = setInverse,
+       getInverse = getInverse)
 }
 
 
 ## Takes a special list object (produced by the makeCacheMatrix function)
 ## along with any extra arguments you want to pass down to the solve function
 ## returns the special object's inverse, if the object dosn't have a value for 
-## the inverse: it will be calculated and saved inside the special object then return 
+## the inverse: it will be calculated and saved inside the special object then returned 
+## This function assumes that the matrix is invertible.
 
 cacheSolve <- function(x, ...) {
 
-  s <- x$getSolve()
-  if(!is.null(s)) {
+  i <- x$getInverse()
+  if(!is.null(i)) {
     message("getting cached data")
-    return(s)
+    return(i)
   }
   data <- x$get()
-  s <- solve(data, ...)
-  x$setSolve(s)
-  s
+  i <- solve(data, ...)
+  x$setInverse(i)
+  i
 }
 
